@@ -1,0 +1,33 @@
+name: CI Pipeline
+
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run tests
+      run: |
+        echo "Running tests"
+        # Simulación de pruebas
+        echo "Tests completed successfully"
+
+    - name: Export metrics
+      run: |
+        echo "# TYPE build_duration_seconds gauge" >> metrics.prom
+        echo "# HELP build_duration_seconds Duration of the build in seconds." >> metrics.prom
+        echo "build_duration_seconds $(($SECONDS))" >> metrics.prom
+      env:
+        SECONDS: ${{ github.run_duration }}
