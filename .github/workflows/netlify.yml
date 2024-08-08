@@ -1,0 +1,28 @@
+name: Deploy to Netlify
+
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Deploy to Netlify
+      env:
+        API_KEY: ${{ secrets.API_KEY }}
+      run: |
+        curl -X POST -H "Authorization: Bearer $API_KEY" \
+        -H "Content-Type: application/json" \
+        -d '{"site_id":"5037a3bf-e54f-4f5b-939d-279348e1865b"}' \
+        https://api.netlify.com/api/v1/sites/5037a3bf-e54f-4f5b-939d-279348e1865b/deploys
